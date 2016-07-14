@@ -8,7 +8,7 @@
 
 #### 技术栈
 
-![技术栈](wd-web-stack.png)
+![技术栈](http://gitbooks.muyunsong.com/wd-web-stack.png)
 
 #### 快速上手
 
