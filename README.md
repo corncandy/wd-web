@@ -8,7 +8,7 @@
 
 #### 技术栈
 
-![技术栈](http://gitbooks.muyunsong.com/wd-web-stack.png)
+![技术栈](docs/wd-web-stack.png)
 
 #### 快速上手
 
@@ -16,10 +16,13 @@
 ```
 [sudo] npm install -g gulp
 ```
-2. 下载并解压[wd-web-starterkit.zip](wd-web-starterkit.zip) (*请询问前端负责人获取最新包*)
+2. 下载
+```
+git clone git@github.com:corncandy/wd-web.git
+```
 3. 进入目录并安装依赖
 ```
-cd wd-web-starterkit
+cd wd-web
 npm install
 ```
 4. 开发模式
