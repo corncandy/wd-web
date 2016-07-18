@@ -9,9 +9,13 @@ import swPrecache from 'sw-precache';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import {output as pagespeed} from 'psi';
 import pkg from './package.json';
+import proxyMiddleware from 'http-proxy-middleware';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
+const proxy = proxyMiddleware('/upp/web/v1', {
+  target: 'http://10.199.203.227:41006'
+});
 
 // Lint JavaScript
 gulp.task('lint', () =>
@@ -33,8 +37,9 @@ gulp.task('images', () =>
 );
 
 // Copy all files at the root level (app)
-gulp.task('copy', () =>
-  gulp.src([
+gulp.task('copy', () => {
+  gulp.src(['app/vendors/**/*']).pipe(gulp.dest('dist/vendors'));
+  return gulp.src([
     'app/*',
     '!app/*.html',
     'node_modules/apache-server-configs/dist/.htaccess'
@@ -42,7 +47,7 @@ gulp.task('copy', () =>
     dot: true
   }).pipe(gulp.dest('dist'))
     .pipe($.size({title: 'copy'}))
-);
+});
 
 // Compile and automatically prefix stylesheets
 gulp.task('styles', () => {
@@ -77,23 +82,30 @@ gulp.task('styles', () => {
     .pipe(gulp.dest('dist/styles'));
 });
 
+// Generate handlebars template
+gulp.task('templates', () => {
+  return gulp.src('app/templates/**/*.hbs')
+    .pipe($.handlebars())
+    .pipe($.defineModule('plain'))
+    .pipe($.declare({
+      namespace: 'WUI.templates'
+    }))
+    .pipe($.concat('templates.js'))
+    .pipe(gulp.dest('.tmp/scripts'))
+    .pipe(gulp.dest('dist/scripts'));
+});
+
 // Concatenate and minify JavaScript. Optionally transpiles ES2015 code to ES5.
 // to enable ES2015 support remove the line `"only": "gulpfile.babel.js",` in the
 // `.babelrc` file.
 gulp.task('scripts', () =>
-    gulp.src([
-      // Note: Since we are not using useref in the scripts build pipeline,
-      //       you need to explicitly list your scripts here in the right order
-      //       to be correctly concatenated
-      './app/scripts/main.js'
-      // Other scripts
-    ])
+    gulp.src(['./app/scripts/**/*.js'])
       .pipe($.newer('.tmp/scripts'))
       .pipe($.sourcemaps.init())
       .pipe($.babel())
       .pipe($.sourcemaps.write())
       .pipe(gulp.dest('.tmp/scripts'))
-      .pipe($.concat('main.min.js'))
+      // .pipe($.concat('main.min.js'))
       .pipe($.uglify({preserveComments: 'some'}))
       // Output files
       .pipe($.size({title: 'scripts'}))
@@ -130,7 +142,7 @@ gulp.task('html', () => {
 gulp.task('clean', () => del(['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
 // Watch files for changes & reload
-gulp.task('serve', ['scripts', 'styles'], () => {
+gulp.task('serve', ['scripts', 'templates', 'styles'], () => {
   browserSync({
     notify: false,
     // Customize the Browsersync console logging prefix
@@ -141,7 +153,9 @@ gulp.task('serve', ['scripts', 'styles'], () => {
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
     // https: true,
-    server: ['.tmp', 'app'],
+    server: ['app', '.tmp'],
+    directory: true,
+    middleware: [proxy],
     port: 3000
   });
 
@@ -149,6 +163,7 @@ gulp.task('serve', ['scripts', 'styles'], () => {
   gulp.watch(['app/styles/**/*.{scss,css}'], ['styles', reload]);
   gulp.watch(['app/scripts/**/*.js'], ['lint', 'scripts', reload]);
   gulp.watch(['app/images/**/*'], reload);
+  gulp.watch(['app/templates/**/*.hbs'], ['templates', reload]);
 });
 
 // Build and serve the output from the dist build
@@ -163,6 +178,8 @@ gulp.task('serve:dist', ['default'], () =>
     //       will present a certificate warning in the browser.
     // https: true,
     server: 'dist',
+    directory: true,
+    middleware: [proxy],
     port: 3001
   })
 );
@@ -171,6 +188,7 @@ gulp.task('serve:dist', ['default'], () =>
 gulp.task('default', ['clean'], cb =>
   runSequence(
     'styles',
+    'templates',
     ['lint', 'html', 'scripts', 'images', 'copy'],
     cb
   )
@@ -186,6 +204,13 @@ gulp.task('pagespeed', cb =>
     // key: 'YOUR_API_KEY'
   }, cb)
 );
+
+// Generate & deploy gh-pages
+gulp.task('deploy', ['default'], () => {
+  return gulp.src('dist')
+    .pipe($.subtree())
+    .pipe($.clean());
+});
 
 // Load custom tasks from the `tasks` directory
 // Run: `npm install --save-dev require-dir` from the command-line
