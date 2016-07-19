@@ -51,6 +51,7 @@
     "extends": "eslint:recommended",
     "globals": {
       "browser": false,
+      "setTimeout": false,
       "$": false,
       "WUI": true
     }
