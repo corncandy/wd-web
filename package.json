@@ -3,7 +3,7 @@
   "description": "WUI framework for Web Site.",
   "author": "Cloud Mu <muyunsong@gmail.com> (https://muyunsong.com)",
   "user": "corncandy",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "devDependencies": {
     "apache-server-configs": "^2.7.1",
