@@ -12,24 +12,50 @@
   <!-- Global Style -->
   <link rel="stylesheet" href="../styles/common.css">
   <!-- Internal Components -->
-  <link rel="stylesheet" href="../components/styles/sample-component.css">
+  <link rel="stylesheet" href="../components/styles/side-panel.css">
+  <link rel="stylesheet" href="../components/styles/site-header.css">
   <!-- Page Style -->
   <link rel="stylesheet" href="../styles/sample/sample-page.css">
 </head>
 
 <body>
-  <div class="sample-component"></div>
+  <div class="wrapper">
+    <section class="side-panel"></section>
+    <section class="main-panel">
+      <header class="site-header"></header>
+      <div class="left-part">
+        <section class="earnings-history">
+          <img />
+        </section>
+        <section class="earnings-statistic">
+          <img />
+        </section>
+        <section class="earnings-table">
+          <img />
+        </section>
+      </div>
+      <div class="right-part">
+        <section class="my-profile">
+          <img />
+        </section>
+        <section class="my-events">
+          <img />
+        </section>
+      </div>
+    </section>
+  </div>
   <!-- Vendors -->
   <script src="../vendors/scripts/jquery.min.js"></script>
   <script src="../vendors/scripts/handlebars.runtime.min.js"></script>
   <!-- External Components -->
-  <script src="../vendors/scripts/wui-web-min.js"></script>
+  <script src="../vendors/scripts/wui-web.min.js"></script>
   <!-- Handlebars templates -->
   <script src="../scripts/templates.js"></script>
   <!-- Global Logic -->
   <script src="../scripts/common.js"></script>
   <!-- Internal Components -->
-  <script src="../components/scripts/sample-component.js"></script>
+  <script src="../components/scripts/side-panel.js"></script>
+  <script src="../components/scripts/site-header.js"></script>
   <!-- Page Logic -->
   <script src="../scripts/sample/sample-page.js"></script>
 </body>

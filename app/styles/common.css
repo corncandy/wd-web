@@ -1,0 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #EFF3F6;
+}
+
+.wrapper {
+  overflow: hidden;
+  background-image: url('../images/common-background.png');
+  background-repeat: repeat-y;
+}
+

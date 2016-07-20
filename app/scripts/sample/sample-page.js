@@ -1,16 +1,42 @@
 'use strict';
 
 $(function() {
-  var component = WUI.SampleComponent.create({
-    $el: $('.sample-component')
+  WUI.init();
+});
+
+WUI.ready = function() {
+  // Init common components for pages.
+  WUI.SidePanel.create({
+    $el: $('.side-panel')
   });
 
-  component.show();
+  WUI.SiteHeader.create({
+    $el: $('.site-header')
+  });
 
-  setTimeout(function() {
-    component.hide();
-    setTimeout(function() {
-      component.show();
-    }, 1000);
-  }, 1000);
-});
+  loadHistory();
+  loadStatistic();
+  loadTable();
+  loadProfile();
+  loadEvents();
+};
+
+function loadHistory() {
+  $('.earnings-history img').attr('src', '../images/sample/sample-page-earnings-history.png');
+}
+
+function loadStatistic() {
+  $('.earnings-statistic img').attr('src', '../images/sample/sample-page-statistic.png');
+}
+
+function loadTable() {
+  $('.earnings-table img').attr('src', '../images/sample/sample-page-table.png');
+}
+
+function loadProfile() {
+  $('.my-profile img').attr('src', '../images/sample/sample-page-profile.png');
+}
+
+function loadEvents() {
+  $('.my-events img').attr('src', '../images/sample/sample-page-events.png');
+}
