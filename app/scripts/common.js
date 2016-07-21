@@ -2,6 +2,6 @@
 
 var WUI = WUI = WUI || {};
 
-WUI.init = function(options) {
+WUI.init = function() {
   WUI.ready();
 };

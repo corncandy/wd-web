@@ -8,6 +8,8 @@ body {
 
 .wrapper {
   overflow: hidden;
+  width: 1580px;
+  margin: 0 auto;
   background-image: url('../images/common-background.png');
   background-repeat: repeat-y;
 }
