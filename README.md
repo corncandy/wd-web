@@ -88,110 +88,97 @@ gulpfile.babel.js 编译脚本
 * 子系统划分需要与后台开发达成一致，需要配置相应的路由
 
 #### 页面结构
-/app/aas/account-management.html
+/app/sample/sample-page.html
 ```html
 <!DOCTYPE html>
 <html>
-<head>
+
+<head lang="zh-CN">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>万达统一运营平台</title>
+  <title>WD Web Startker Kit</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="../vendors/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="../vendors/styles/font-awesome.min.css">
-  <link rel="stylesheet" href="../vendors/styles/AdminLTE.min.css">
-  <link rel="stylesheet" href="../vendors/styles/_all-skins.min.css">
-  <!--系统通用CSS文件-->
+  <link rel="shortcut icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../vendors/styles/reset.css">
+  <!-- External Components -->
+  <link rel="stylesheet" href="../vendors/styles/wui-web.min.css">
+  <!-- Global Style -->
   <link rel="stylesheet" href="../styles/common.css">
-  <!--页面CSS文件-->
-  <link rel="stylesheet" href="../styles/aas/account-management.css">
-  <!--[if lt IE 9]>
-    <script src="vendors/scripts/html5shiv.min.js"></script>
-    <script src="vendors/scripts/respond.min.js"></script>
-  <![endif]-->
+  <!-- Internal Components -->
+  <link rel="stylesheet" href="../components/styles/side-panel.css">
+  <link rel="stylesheet" href="../components/styles/site-header.css">
+  <!-- Page Style -->
+  <link rel="stylesheet" href="../styles/sample/sample-page.css">
 </head>
 
-<!--使用Bootstrap类-->
-<body class="hold-transition skin-blue sidebar-mini">
+<body>
   <div class="wrapper">
-    <!--控件接入点-->
-    <header class="main-header"></header>
-    <aside class="main-sidebar"></aside>
-    <div class="content-wrapper">
-      <section class="content-header"></section>
-      <section class="content">
-        <div class="box">
-          <div class="data-filter"></div>
-          <div class="data-table"></div>
-          <div class="data-paginator"></div>
-        </div>
-      </section>
-    </div>
-    <footer class="main-footer"></footer>
+    <section class="side-panel"></section>
+    <section class="main-panel">
+      <header class="site-header"></header>
+      <div class="left-part">
+        <section class="earnings-history">
+          <img />
+        </section>
+        <section class="earnings-statistic">
+          <img />
+        </section>
+        <section class="earnings-table">
+          <img />
+        </section>
+      </div>
+      <div class="right-part">
+        <section class="my-profile">
+          <img />
+        </section>
+        <section class="my-events">
+          <img />
+        </section>
+      </div>
+    </section>
   </div>
-  <script src="../vendors/scripts/jQuery-2.1.4.min.js"></script>
+  <!-- Vendors -->
+  <script src="../vendors/scripts/jquery.min.js"></script>
   <script src="../vendors/scripts/handlebars.runtime.min.js"></script>
-  <script src="../vendors/scripts/bootstrap.min.js"></script>
-  <script src="../vendors/scripts/jquery.slimscroll.min.js"></script>
-  <script src="../vendors/scripts/app.js"></script>
-  <!--从templates目录下的模板文件自动生成-->
+  <!-- External Components -->
+  <script src="../vendors/scripts/wui-web.min.js"></script>
+  <!-- Handlebars templates -->
   <script src="../scripts/templates.js"></script>
-  <!--系统通用JS文件-->
+  <!-- Global Logic -->
   <script src="../scripts/common.js"></script>
-  <!--页面JS文件-->
-  <script src="../scripts/aas/account-management.js"></script>
+  <!-- Internal Components -->
+  <script src="../components/scripts/side-panel.js"></script>
+  <script src="../components/scripts/site-header.js"></script>
+  <!-- Page Logic -->
+  <script src="../scripts/sample/sample-page.js"></script>
 </body>
+
 </html>
 ```
 
-/app/scripts/aas/account-management.js
+/app/scripts/sample/sample-page.js
 ```javascript
 'use strict';
 
 $(function() {
-  // 初始化WUI框架（生成页头，页脚，主菜单等）
-  WUI.init({
-    system: 'aas'
-  });
+  WUI.init();
 });
 
-// 框架初始完成回调，加入页面逻辑
 WUI.ready = function() {
-  var meta = {
-    userID: {
-      label: '用户ID'
-    }, ...
-  };
-
-  // 在加载点上生成控件
-  WUI.DataFilter.create({
-    $el: $('.data-filter'),
-    meta: meta,
-    fields: ['mobile', 'userName', 'status'],
-    onFilter: function(params) {
-      queryData($.extend(params, {
-        currentPage: 0,
-        pageSize: 1
-      }));
-    }
+  // Init common components for pages.
+  WUI.SidePanel.create({
+    $el: $('.side-panel')
   });
 
-  // 在加载点上生成控件
-  WUI.DataTable.create({
-    $el: $('.data-table'),
-    meta: meta,
-    fields: ['userID', 'userName', 'mobile', 'email', 'status'],
-    list: list,
-    operations: [{
-      name: '编辑',
-      callback: editData
-    }, {
-      name: '重置密码',
-      callback: resetPassword
-    }]
+  WUI.SiteHeader.create({
+    $el: $('.site-header')
   });
 
-  ...
+  loadHistory();
+  loadStatistic();
+  loadTable();
+  loadProfile();
+  loadEvents();
 };
 ```
 
